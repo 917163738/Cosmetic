@@ -47,10 +47,10 @@ public class CosmeticVerificationTool {
             return;
         }
 
-        if (isSkintool(args)) {//判断是否可以执行id匹配验证
-            if (isFile(args[1]) && isSkinFile(args[2])) {
+        if (isCusmetictool(args)) {//判断是否可以执行id匹配验证
+            if (isFile(args[1]) && isCosmeticFile(args[2])) {
                 int type = isRFileOrApk(args[1]);
-                if (skintool(args[1], args[2], type)) {
+                if (Cusmetictool(args[1], args[2], type)) {
                     System.out.println("结果：可用");
                     return;
                 }
@@ -68,7 +68,7 @@ public class CosmeticVerificationTool {
      * @param args cmd输入参数
      * @return
      */
-    public static boolean isSkintool(String[] args) {
+    public static boolean isCusmetictool(String[] args) {
         if (args[0].toLowerCase().equals("v")) {
             if (args.length == 3) {
                 return true;
@@ -119,12 +119,12 @@ public class CosmeticVerificationTool {
      * @param filePath 皮肤包路径
      * @return true是皮肤包文件，false不是或文件不存在不可读
      */
-    public static boolean isSkinFile(String filePath) {
+    public static boolean isCosmeticFile(String filePath) {
         if (isFile(filePath)) {
             if (new File(filePath).getName().endsWith(".cosm")) {
                 return true;
             } else {
-                System.out.println("文件\"" + filePath + "\"不符合，必须是.skin后缀的皮肤包文件！");
+                System.out.println("文件\"" + filePath + "\"不符合，必须是.cosm后缀的皮肤包文件！");
             }
         }
         return false;
@@ -134,30 +134,30 @@ public class CosmeticVerificationTool {
      * 打印信息
      */
     public static void printInfo() {
-        System.out.println("skintool v1.0 -验证皮肤包是否可使用于当前应用版本");
-        System.out.println("Copyright 2015 autonavi");
-        System.out.println("Updated by baofei <fei.bao@alibaba-inc.com>\n");
-        System.out.println("suage:skintool");
+        System.out.println("Cusmetictool v1.0 -验证皮肤包是否可使用于当前应用版本");
+        System.out.println("Copyright 2015 11-team");
+        System.out.println("Updated by baofei <wysbaofei@gmail.com>\n");
+        System.out.println("suage:Cusmetictool");
         System.out.println("-version,--version    prints the version then exits\n");
 
-        System.out.println("usage: skintool v[verification] <file_R> <file_skin>");
+        System.out.println("usage: Cusmetictool v[verification] <file_R> <file_cosmetic>");
         System.out.println("<file_R> 项目R.java文件路径");
-        System.out.println("<file_skin> 皮肤包路径\n");
+        System.out.println("<file_cosmetic> 皮肤包路径\n");
 
-        System.out.println("usage: skintool v[verification] <file_APK> <file_skin>");
+        System.out.println("usage: Cusmetictool v[verification] <file_APK> <file_cosmetic>");
         System.out.println("<file_APK> apk文件路径");
-        System.out.println("<file_skin> 皮肤包路径");
+        System.out.println("<file_cosmetic> 皮肤包路径");
     }
 
     /**
      * 执行id匹配验证
      * 
      * @param r R.java文件路径或apk文件路径
-     * @param skin 皮肤包路径
+     * @param cosmeticPath 皮肤包路径
      * @param type 匹配类型， 0 R.java文件匹配， 1 apk文件匹配
      * @return true匹配成功，false匹配失败
      */
-    public static boolean skintool(String r, String skin, int type) {
+    public static boolean Cusmetictool(String r, String cosmeticPath, int type) {
         if (type == -1) {
             System.out.println("未知错误...");
             return false;
@@ -174,11 +174,11 @@ public class CosmeticVerificationTool {
                     return false;
                 }
             }
-            HashMap<String, HashMap<String, Integer>> skinMap = readSkinFile(skin);
+            HashMap<String, HashMap<String, Integer>> cosmeticMap = readSkinFile(cosmeticPath);
             Iterator rIter = rMap.entrySet().iterator();
             while (rIter.hasNext()) {
                 Map.Entry entry = (Map.Entry) rIter.next();
-                if (!verification((String) entry.getKey(), rMap, skinMap)) {
+                if (!verification((String) entry.getKey(), rMap, cosmeticMap)) {
                     return false;
                 }
             }
@@ -195,33 +195,33 @@ public class CosmeticVerificationTool {
      * 
      * @param key id类型
      * @param rMap apk或R.java文件id集合
-     * @param skinMap 皮肤包id集合
+     * @param cosmeticMap 皮肤包id集合
      * @return true匹配成功， false匹配失败
      */
     public static boolean verification(String key, HashMap<String, HashMap<String, Integer>> rMap,
-            HashMap<String, HashMap<String, Integer>> skinMap) {
+            HashMap<String, HashMap<String, Integer>> cosmeticMap) {
         System.out.print("verification " + key + ":");
         HashMap<String, Integer> r = rMap.get(key);
-        HashMap<String, Integer> skin = skinMap.get(key);
-        if (r == null && skin == null) {
+        HashMap<String, Integer> cosmetic = cosmeticMap.get(key);
+        if (r == null && cosmetic == null) {
             System.out.println("匹配;");
             return true;
-        } else if (r == null && skin != null && skin.size() == 0) {
+        } else if (r == null && cosmetic != null && cosmetic.size() == 0) {
             System.out.println("匹配;");
             return true;
-        } else if (r != null && skin == null && r.size() == 0) {
+        } else if (r != null && cosmetic == null && r.size() == 0) {
             System.out.println("匹配;");
             return true;
-        } else if (r != null && skin != null) {
-            if (r.size() != skin.size()) {
+        } else if (r != null && cosmetic != null) {
+            if (r.size() != cosmetic.size()) {
                 System.out.println("不匹配;原因：resId数目不对");
                 return false;
             }
             for (Entry<String, Integer> pair : r.entrySet()) {
-                if (!skin.containsKey(pair.getKey())
-                        || !skin.get(pair.getKey()).equals(pair.getValue())) {
+                if (!cosmetic.containsKey(pair.getKey())
+                        || !cosmetic.get(pair.getKey()).equals(pair.getValue())) {
                     System.out.print("不匹配;");
-                    if (!skin.containsKey(pair.getKey())) {
+                    if (!cosmetic.containsKey(pair.getKey())) {
                         System.out.println("皮肤包中不存在" + pair.getKey());
                     } else {
                         System.out.println("皮肤包中" + pair.getKey() + "值不相等");
@@ -295,14 +295,14 @@ public class CosmeticVerificationTool {
     /**
      * 提取皮肤包的id
      * 
-     * @param skin 皮肤包路径
+     * @param cosmetic 皮肤包路径
      * @return 皮肤包的id集合
      * @throws IOException
      */
-    public static HashMap<String, HashMap<String, Integer>> readSkinFile(String skin)
+    public static HashMap<String, HashMap<String, Integer>> readSkinFile(String cosmetic)
             throws IOException {
-        System.out.println("提取\"" + skin + "\"文件");
-        ZipFile zipfile = new ZipFile(skin);
+        System.out.println("提取\"" + cosmetic + "\"文件");
+        ZipFile zipfile = new ZipFile(cosmetic);
         HashMap<String, HashMap<String, Integer>> rMap = new HashMap<String, HashMap<String, Integer>>();
         HashMap<String, Integer> intMap = null;
         ZipEntry entry = zipfile.getEntry("assets/public.xml");

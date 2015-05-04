@@ -5,28 +5,18 @@ import brut.androlib.AndrolibException;
 import brut.androlib.ApkDecoder;
 import brut.androlib.res.data.ResPackage;
 import brut.androlib.res.data.ResResSpec;
-import brut.androlib.res.util.ExtMXSerializer;
 import brut.directory.Directory;
 import brut.directory.DirectoryException;
 import brut.directory.FileDirectory;
 
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  * @author fei.bao
@@ -169,12 +159,12 @@ public class CosmeticVerificationTool {
                 rMap = readRFile(r);
             } else {
                 //rMap = readApkFile(r);
-                rMap = getApkIds(r);
+                rMap = getIds(r, "apk");
                 if (rMap == null) {
                     return false;
                 }
             }
-            HashMap<String, HashMap<String, Integer>> cosmeticMap = readSkinFile(cosmeticPath);
+            HashMap<String, HashMap<String, Integer>> cosmeticMap = getIds(cosmeticPath, "皮肤包");
             Iterator rIter = rMap.entrySet().iterator();
             while (rIter.hasNext()) {
                 Map.Entry entry = (Map.Entry) rIter.next();
@@ -293,114 +283,13 @@ public class CosmeticVerificationTool {
     }
 
     /**
-     * 提取皮肤包的id
-     * 
-     * @param cosmetic 皮肤包路径
-     * @return 皮肤包的id集合
-     * @throws IOException
-     */
-    public static HashMap<String, HashMap<String, Integer>> readSkinFile(String cosmetic)
-            throws IOException {
-        System.out.println("提取\"" + cosmetic + "\"文件");
-        ZipFile zipfile = new ZipFile(cosmetic);
-        HashMap<String, HashMap<String, Integer>> rMap = new HashMap<String, HashMap<String, Integer>>();
-        HashMap<String, Integer> intMap = null;
-        ZipEntry entry = zipfile.getEntry("assets/public.xml");
-        if (entry != null) {
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    zipfile.getInputStream(entry)));
-            String line;
-            while ((line = in.readLine()) != null) {
-                if (line.length() > 0) {
-                    line = line.trim();
-                    if (line.trim().startsWith("<public")) {
-                        String type = getXmlValue(line, "type");
-                        intMap = rMap.get(type);
-                        if (intMap == null) {
-                            intMap = new HashMap<String, Integer>();
-                            rMap.put(type, intMap);
-                        }
-                        String name = getXmlValue(line, "name");
-                        String id = getXmlValue(line, "id");
-                        intMap.put(name, id.hashCode());
-                    }
-                }
-            }
-            in.close();
-        }
-        zipfile.close();
-        return rMap;
-    }
-
-    /**
-     * 提取Apk文件的id
-     * 
-     * @param apk apk路径
-     * @return apk的id集合
-     * @throws IOException
-     */
-    @Deprecated
-    public static HashMap<String, HashMap<String, Integer>> readApkFile(String apk)
-            throws IOException {
-        if (!zipApkPublic(apk)) {
-            return null;
-        }
-        HashMap<String, HashMap<String, Integer>> rMap = new HashMap<String, HashMap<String, Integer>>();
-        HashMap<String, Integer> intMap = null;
-        BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(new File(
-                new File("").getAbsolutePath() + "/values/public.xml"))));
-        String line;
-        while ((line = in.readLine()) != null) {
-            if (line.length() > 0) {
-                line = line.trim();
-                if (line.trim().startsWith("<public")) {
-                    String type = getXmlValue(line, "type");
-                    intMap = rMap.get(type);
-                    if (intMap == null) {
-                        intMap = new HashMap<String, Integer>();
-                        rMap.put(type, intMap);
-                    }
-                    String name = getXmlValue(line, "name");
-                    String id = getXmlValue(line, "id");
-                    intMap.put(name, id.hashCode());
-                }
-            }
-        }
-        in.close();
-        return rMap;
-    }
-
-    /**
-     * 解析xml文件中的id
-     * 
-     * @param line xml中的一行数据
-     * @param key 数据类型
-     * @return
-     */
-    private static String getXmlValue(String line, String key) {
-        String re = "\"([^ ]+)\"";
-        Pattern p = Pattern.compile(key + "=" + re);
-        Matcher m = p.matcher(line);
-        if (m.find(0)) {
-            line = m.group();
-        }
-        p = Pattern.compile(re);
-        m = p.matcher(line);
-        if (m.find(0)) {
-            line = m.group();
-            return line.substring(1, line.length() - 1);
-        }
-        return null;
-    }
-
-    /**
      * 提取apk中的id
      * 
      * @param apkPath apk路径
      * @return
      */
-    public static HashMap<String, HashMap<String, Integer>> getApkIds(String apkPath) {
-        System.out.println("提取apk文件id...");
+    public static HashMap<String, HashMap<String, Integer>> getIds(String apkPath, String tips) {
+        System.out.println("提取" + tips + "文件ids...");
         HashMap<String, HashMap<String, Integer>> rMap = new HashMap<String, HashMap<String, Integer>>();
         HashMap<String, Integer> intMap = null;
         ApkDecoder apk = new ApkDecoder();
@@ -422,7 +311,7 @@ public class CosmeticVerificationTool {
                 }
 
             }
-            System.out.println("提取apk文件id成功");
+            System.out.println("提取" + tips + "文件ids成功");
             return rMap;
         } catch (AndrolibException e) {
             // TODO Auto-generated catch block
@@ -433,71 +322,6 @@ public class CosmeticVerificationTool {
         }
         System.out.println("提取apk文件id失败");
         return rMap;
-    }
-
-    @Deprecated
-    public static boolean zipApkPublic(String apkPath) {
-        System.out.println("提取apk文件id...");
-        ApkDecoder apk = new ApkDecoder();
-        apk.setApkFile(new File(apkPath));
-        ExtMXSerializer xmlSerializer = getResXmlSerializer();
-        try {
-            Directory out = new FileDirectory(new File("."));
-            for (ResPackage pkg : apk.getResTable().listMainPackages()) {
-                generatePublicXml(pkg, out, xmlSerializer);
-            }
-            System.out.println("提取apk文件id成功");
-            return true;
-        } catch (AndrolibException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (DirectoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        System.out.println("提取apk文件id失败");
-        return false;
-    }
-
-    @Deprecated
-    private static void generatePublicXml(ResPackage pkg, Directory out, XmlSerializer serial)
-            throws AndrolibException {
-        try {
-            OutputStream outStream = out.getFileOutput("values/public.xml");
-            serial.setOutput(outStream, null);
-            serial.startDocument(null, null);
-            serial.startTag(null, "resources");
-
-            for (ResResSpec spec : pkg.listResSpecs()) {
-                serial.startTag(null, "public");
-                serial.attribute(null, "type", spec.getType().getName());
-                serial.attribute(null, "name", spec.getName());
-                serial.attribute(null, "id", String.format("0x%08x", spec.getId().id));
-                serial.endTag(null, "public");
-            }
-
-            serial.endTag(null, "resources");
-            serial.endDocument();
-            serial.flush();
-            outStream.close();
-        } catch (IOException ex) {
-            throw new AndrolibException("Could not generate public.xml file", ex);
-        } catch (DirectoryException ex) {
-            throw new AndrolibException("Could not generate public.xml file", ex);
-        }
-
-    }
-
-    @Deprecated
-    private static ExtMXSerializer getResXmlSerializer() {
-        ExtMXSerializer serial = new ExtMXSerializer();
-        serial.setProperty("http://xmlpull.org/v1/doc/properties.html#serializer-indentation",
-                "    ");
-        serial.setProperty("http://xmlpull.org/v1/doc/properties.html#serializer-line-separator",
-                System.getProperty("line.separator"));
-        serial.setProperty("DEFAULT_ENCODING", "utf-8");
-        serial.setDisabledAttrEscape(true);
-        return serial;
     }
 
 }

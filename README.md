@@ -18,9 +18,10 @@ Android 换肤解决方案
 	
 	4.可在assets中增加皮肤包的icon，此项可选。
 
-	5.\res\values下的public.xml复制到assets中；
-	在打包成皮肤包后可用于与当前项目R.java验证id的匹配；
-	使用提供的验证工具验证。
+	#第5步骤可以舍弃，验证id已无需public.xml
+	#5.\res\values下的public.xml复制到assets中，
+	#在打包成皮肤包后可用于与当前项目R.java验证id的匹配，
+	#使用提供的验证工具验证
 	
 	6.建议把资源里的smali文件（代码文件）删除。
 	

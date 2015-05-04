@@ -121,7 +121,7 @@ public class CosmeticVerificationTool {
      */
     public static boolean isSkinFile(String filePath) {
         if (isFile(filePath)) {
-            if (new File(filePath).getName().endsWith(".skin")) {
+            if (new File(filePath).getName().endsWith(".cosm")) {
                 return true;
             } else {
                 System.out.println("文件\"" + filePath + "\"不符合，必须是.skin后缀的皮肤包文件！");

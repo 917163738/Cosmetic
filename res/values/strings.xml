@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Cosmetic</string>
+    <string name="text">背景红,文字黑,18sp</string>
+    <string name="skin">皮肤包管理</string>
+    <string name="cur_skin">当前皮肤：%s</string>
+    <string name="default_skin">默认</string>
+    <string name="cur_skin_version">当前支持的皮肤包版本：%1$d-%2$d</string>
+</resources>

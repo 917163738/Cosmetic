@@ -41,9 +41,9 @@ suage:Cusmetictool
 -version,--version    prints the version then exits
 
 usage: Cusmetictool v[verification] <file_R> <file_cosmetic>
-	<file_R> 项目R.java文件路径
-	<file_cosmetic> 皮肤包路径
+	#<file_R>] 项目R.java文件路径
+	#<file_cosmetic> 皮肤包路径
 
 usage: Cusmetictool v[verification] <file_APK> <file_cosmetic>
-	<file_APK> apk文件路径
-	<file_cosmetic> 皮肤包路径
+	#<file_APK> apk文件路径
+	#<file_cosmetic> 皮肤包路径

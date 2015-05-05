@@ -34,7 +34,5 @@ Android 换肤解决方案
 新增皮肤包效验工具，用于确定新皮肤包与主程序apk包中R文件所有id可以一一对应。
 
 Cmd运行编译好的Cusmetictool.jar或双击使用Cusmetictool.bat脚本（Cusmetictool.jar与脚本同一目录）
-
-Cusmetictool v[verification] file_R file_cosmetic
-
-Cusmetictool v[verification] file_APK file_cosmetic
+此工具提供两种比对ids的方法，一个是R.java文件和皮肤包比对，一个是apk与皮肤包比对
+可使用cmd里使用Cusmetictool命令查看使用方法

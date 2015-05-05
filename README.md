@@ -37,4 +37,4 @@ Cmd运行编译好的Cusmetictool.jar或双击使用Cusmetictool.bat脚本（Cus
 
 此工具提供两种比对ids的方法，一个是R.java文件和皮肤包比对，一个是apk与皮肤包比对
 
-可使用cmd里使用Cusmetictool命令查看使用方法
+可在控制台里使用Cusmetictool命令查看使用方法

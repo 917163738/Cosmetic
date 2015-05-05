@@ -35,6 +35,6 @@ Android 换肤解决方案
 
 Cmd运行编译好的Cusmetictool.jar或双击使用Cusmetictool.bat脚本（Cusmetictool.jar与脚本同一目录）
 
-Cusmetictool v[verification] <file_R> <file_cosmetic>
+Cusmetictool v[verification] file_R file_cosmetic
 
-Cusmetictool v[verification] <file_APK> <file_cosmetic>
+Cusmetictool v[verification] file_APK file_cosmetic

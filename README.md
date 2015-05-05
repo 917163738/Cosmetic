@@ -33,17 +33,8 @@ Android 换肤解决方案
 
 新增皮肤包效验工具，用于确定新皮肤包与主程序apk包中R文件所有id可以一一对应。
 
-Cusmetictool v1.0 -验证皮肤包是否可使用于当前应用版本
-Copyright 2015 11-team]
-Updated by baofei <wysbaofei@gmail.com>
+Cmd运行编译好的Cusmetictool.jar或双击使用Cusmetictool.bat脚本（Cusmetictool.jar与脚本同一目录）
 
-suage:Cusmetictool
--version,--version    prints the version then exits
+Cusmetictool v[verification] <file_R> <file_cosmetic>
 
-usage: Cusmetictool v[verification] <file_R> <file_cosmetic>
-	file_R 项目R.java文件路径
-	file_cosmetic 皮肤包路径
-
-usage: Cusmetictool v[verification] <file_APK> <file_cosmetic>
-	file_APK apk文件路径
-	file_cosmetic 皮肤包路径
+Cusmetictool v[verification] <file_APK> <file_cosmetic>

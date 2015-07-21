@@ -25,7 +25,7 @@ Android 换肤解决方案
 	
 	6.建议把资源里的smali文件（代码文件）删除。
 	
-	7.再用apktool重新打包成apk（apktool b <反编译资源路劲>）。
+	7.再用apktool重新打包成apk（apktool b <反编译资源路径>）。
 
   无需签名，新打包的apk根据要求修改名称和后缀就可以用来换肤使用了。
 
